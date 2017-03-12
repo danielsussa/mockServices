@@ -1,0 +1,37 @@
+<div xmlns:th="http://www.w3.org/1999/xhtml">
+    <table class="table table-condensed">
+        <tr>
+            <th>MÓDULO</th>
+            <th>QTD MOCKS</th>
+            <th></th>
+        </tr>
+        <tr th:each="module : ${modules}">
+            <td><a th:href="@{/{projectId}/{moduleId}(moduleId=${module.id},projectId=${project.id})}" th:text="${module.name}"></a></td>
+            <td th:text="${module.mockModels.size()}"></td>
+            <td>
+                <form action="#" th:action="@{'/{projId}'(projId=${project.id},id=${module.id})}" th:method="delete" style ='float: left; padding: 5px;'>
+                    <button type="submit" class="btn btn-danger btn-xs" placeholder="D">D</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+
+
+    <form action="#" th:action="@{/{projectId}(projectId=${project.id})}" th:object="${newModule}" method="post">
+        <input type="hidden" th:field="*{id}"/>
+        <div class="form-group">
+            <input type="text" class="form-control" id="name" placeholder="Nome do Módulo" th:field="*{name}"/>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-6">
+                    <input type="password" class="form-control" id="postPassword" placeholder="Senha para Inserir" th:field="*{postPassword}"/>
+                </div>
+                <div class="col-sm-6">
+                    <input type="password" class="form-control" id="deletePassword" placeholder="Senha para deletar" th:field="*{deletePassword}"/>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-default btn-block">Inserir novo projeto</button>
+    </form>
+</div>

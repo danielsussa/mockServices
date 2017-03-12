@@ -1,0 +1,34 @@
+<div xmlns:th="http://www.w3.org/1999/xhtml">
+    <table class="table table-condensed">
+        <tr>
+            <th>REQUEST</th>
+            <th>RESPONSE</th>
+        </tr>
+        <tr th:each="mock : ${mocks}">
+            <td><h6><small th:text="${mock.request}"></small></h6></td>
+            <td><h6><small th:text="${mock.response}"></small></h6></td>
+            <td>
+                <form action="#" th:action="@{'/{projectId}/{moduleId}'(projectId=${project.id},moduleId=${module.id},id=${mock.id})}" th:method="delete" style ='float: left; padding: 5px;'>
+                    <button type="submit" class="btn btn-danger btn-xs" placeholder="D">D</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+
+    <form class="form-horizontal" action="#" th:action="@{/{projectId}/{moduleId}(projectId=${project.id},moduleId=${module.id})}" th:object="${newMock}" method="post">
+        <div class="form-group">
+            <div class="col-sm-6">
+                <textarea type="text" class="form-control" id="inputRequest" placeholder="Request" rows="20" th:field="*{request}"/>
+            </div>
+            <div class="col-sm-6">
+                <textarea type="text" class="form-control" id="inputResponse" placeholder="Response" rows="20" th:field="*{response}"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-12">
+                <button type="submit" class="btn btn-block btn-default">Enviar</button>
+            </div>
+        </div>
+    </form>
+</div>
+
