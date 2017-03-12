@@ -1,0 +1,22 @@
+<div class="row" id="pwd-container" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="col-md-4"></div>
+
+    <div class="col-md-4">
+        <section class="login-form">
+            <form action="#" role="login" th:action="@{/}" method="post" th:object="${user}">
+                <img src="https://stefanini.com/en/wp-content/uploads/2014/06/Logo_Stefanini-770x165.png" class="img-responsive" alt="" />
+                <input type="text" name="email" placeholder="User name" required="true" class="form-control input-lg" th:field="*{login}"/>
+                <input type="password" class="form-control input-lg" id="password" placeholder="Password" required="true" th:field="*{password}" />
+                <div class="pwstrength_viewport_progress"></div>
+                <button type="submit" name="login" class="btn btn-lg btn-primary btn-block">Login</button>
+                <div>
+                    <p class="text-danger"><th:block th:if="${invalidUser}">Usuario Invalido</th:block></p>
+                </div>
+            </form>
+            <div class="form-links">
+                <a href="#">www.website.com</a>
+            </div>
+        </section>
+    </div>
+    <div class="col-md-4"></div>
+</div>
