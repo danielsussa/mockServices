@@ -3,7 +3,7 @@ package com.example.entity;
 /**
  * Created by dekanczuk on 13/03/2017.
  */
-public class FileDTO implements Comparable<FileDTO>{
+public class FileDTO{
 
     private String requestPath;
     private String responsePath;
@@ -22,10 +22,5 @@ public class FileDTO implements Comparable<FileDTO>{
 
     public void setResponsePath(String responsePath) {
         this.responsePath = responsePath;
-    }
-
-    @Override
-    public int compareTo(FileDTO file) {
-        return 1;
     }
 }

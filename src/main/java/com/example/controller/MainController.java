@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.util.Util;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,8 +24,10 @@ public class MainController {
 
     @ResponseBody
     @RequestMapping("/**")
-    public String main(@PathVariable("project") String project, @RequestBody String xmlRequest){
-        return null;
+    public String main(@RequestBody String xmlRequest){
+        xmlRequest = Util.regexAll(xmlRequest);
+        String xmlResponse = requestMap.get(xmlRequest);
+        return xmlResponse;
     }
 
     public Map<String, String> getRequestMap() {
