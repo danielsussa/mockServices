@@ -6,6 +6,8 @@ package com.example.util;
 public class Util {
     static public String regexAll(String str){
         str = str.replaceAll("\\s+","").replaceAll("<!--Optional:-->","");
-        return str;
+        String[] splitted = str.split("Body");
+        String finalSpl = splitted[1];
+        return finalSpl;
     }
 }

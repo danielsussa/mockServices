@@ -21,60 +21,68 @@ public class Application extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
 		final File folder = new File("mockRepository");
-		Map<String,FileDTO> files = listFilesForFolder(folder);
+		List<FileDTO> files = listFilesForFolder(folder);
+
+
 		ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
 		Map<String,String> requestMap = readAndStorageFiles(files);
 		context.getBean(MainController.class).setRequestMap(requestMap);
 
 	}
 
-	static public Map<String,FileDTO> listFilesForFolder(final File folder) {
-		Map<String,FileDTO> mapList = new HashMap<>();
+	static public List<FileDTO> listFilesForFolder(final File folder) {
+		List<FileDTO> fileList = new ArrayList<>();
 		for (final File fileEntry : folder.listFiles()) {
 			if (fileEntry.isDirectory()) {
-				return listFilesForFolder(fileEntry);
+				fileList.addAll(listFilesForFolder(fileEntry));
 			} else {
 				String[] strSplitted = fileEntry.getName().split("_|\\.");
 				String name = strSplitted[0];
 				String type = strSplitted[1];
 				String path = fileEntry.getPath();
-				if(type.equals("request")){
-					if(mapList.containsKey(name)){
-						mapList.get(name).setRequestPath(path);
-					}else {
-						FileDTO fileDTO = new FileDTO();
+
+				Optional<FileDTO> file = fileList.stream().filter(x -> x.getName().equals(name)).findFirst();
+				if(file.isPresent()){
+					if(type.equals("request")){
+						file.get().setRequestPath(path);
+					}
+					if(type.equals("response")){
+						file.get().setResponsePath(path);
+					}
+				}else {
+					FileDTO fileDTO = new FileDTO();
+					fileDTO.setName(name);
+					if(type.equals("request")){
 						fileDTO.setRequestPath(path);
-						mapList.put(name,fileDTO);
 					}
-				}
-				if(type.equals("response")){
-					if(mapList.containsKey(name)){
-						mapList.get(name).setResponsePath(path);
-					}else {
-						FileDTO fileDTO = new FileDTO();
+					if(type.equals("response")){
 						fileDTO.setResponsePath(path);
-						mapList.put(name,fileDTO);
 					}
+					fileList.add(fileDTO);
 				}
+
 
 			}
 		}
-		return mapList;
+		return fileList;
 	}
 
-	static public Map<String,String> readAndStorageFiles(Map<String,FileDTO> files){
+	static public Map<String,String> readAndStorageFiles(List<FileDTO> files){
 		System.out.println("SERVICES LOADED:");
 		Map<String,String> mapRequestResponse = new HashMap<>();
-		files.forEach((key,file)->{
+
+		int i = 1;
+		for (FileDTO file : files){
 			String requestPath = file.getRequestPath();
 			String responsePath = file.getResponsePath();
 			if(requestPath != null && responsePath != null){
 				String request = Util.regexAll(read(requestPath));
 				String response = read(responsePath);
 				mapRequestResponse.put(request,response);
-				System.out.println("-"+key);
+
+				System.out.println((i++)+". "+file.getName());
 			}
-		});
+		}
 		return mapRequestResponse;
 	}
 

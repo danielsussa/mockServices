@@ -5,8 +5,17 @@ package com.example.entity;
  */
 public class FileDTO{
 
+    private String name;
     private String requestPath;
     private String responsePath;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getRequestPath() {
         return requestPath;
