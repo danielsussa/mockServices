@@ -21,6 +21,23 @@ public class DemoApplicationTests {
 		xStream.alias("soapenv:Envelope", java.util.Map.class);
 		Map<String, List<Object>> map1 = (Map<String, List<Object>>) xStream.fromXML(xml);
 
-		map1.values();
+		getAllKeys(map1.get("soapenv:Envelope"));
 	}
+
+	public List<String> getAllKeys(List<Object> objects){
+		for(Object object : objects){
+			Map<String,Object> mapObj = (Map<String,Object>)object;
+			if(!mapObj.isEmpty()){
+				List<Object> val = (List<Object>)mapObj.values();
+				getAllKeys(val);
+			}
+		}
+		if(objects.size() > 0 ){
+			getAllKeys(objects);
+		}else {
+			System.out.println("ola");
+		}
+		return null;
+	}
+
 }
