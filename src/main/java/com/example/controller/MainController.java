@@ -1,5 +1,7 @@
 package com.example.controller;
 
+import com.example.entity.Mock;
+import com.example.util.TransformXML;
 import com.example.util.Util;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,21 +22,22 @@ import java.util.Map;
 @RequestMapping
 public class MainController {
 
-    private Map<String,String> requestMap = new HashMap<>();
+    private Map<String,Mock> mockMap = new HashMap<>();
 
     @ResponseBody
     @RequestMapping("/**")
     public String main(@RequestBody String xmlRequest){
-        xmlRequest = Util.regexAll(xmlRequest);
-        String xmlResponse = requestMap.get(xmlRequest);
-        return xmlResponse;
+        Map<String,String> requestMap = TransformXML.transformToMap(xmlRequest);
+        xmlRequest = Util.deleteHeader(Util.regexAll(xmlRequest));
+        Mock mock = mockMap.get(xmlRequest);
+        if(mock != null){
+            return mock.getResponse();
+        }
+        return null;
     }
 
-    public Map<String, String> getRequestMap() {
-        return requestMap;
-    }
 
-    public void setRequestMap(Map<String, String> requestMap) {
-        this.requestMap = requestMap;
+    public void setRequestMap(Map<String, Mock> requestMap) {
+        this.mockMap = requestMap;
     }
 }

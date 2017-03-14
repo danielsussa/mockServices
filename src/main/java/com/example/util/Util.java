@@ -6,8 +6,19 @@ package com.example.util;
 public class Util {
     static public String regexAll(String str){
         str = str.replaceAll("\\s+","").replaceAll("<!--Optional:-->","");
-        String[] splitted = str.split("Body");
-        String finalSpl = splitted[1];
-        return finalSpl;
+        return str;
+    }
+
+    static public String deleteHeader(String str){
+        String head = str.substring(0,str.indexOf(">")+1);
+        String strSpl[] = str.split("Header");
+        String body = strSpl.length == 3 ? strSpl[2] : strSpl[1];
+        body = body.substring(body.indexOf("<"),body.length());
+        return head+body;
+    }
+
+    static public String removeDust(String str){
+        int init = str.contains("?>") ? str.indexOf("?>")+2 : 0;
+        return str.substring(init,str.length());
     }
 }

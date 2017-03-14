@@ -2,6 +2,8 @@ package com.example;
 
 import com.example.controller.MainController;
 import com.example.entity.FileDTO;
+import com.example.entity.Mock;
+import com.example.util.TransformXML;
 import com.example.util.Util;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,7 +27,7 @@ public class Application extends SpringBootServletInitializer {
 
 
 		ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
-		Map<String,String> requestMap = readAndStorageFiles(files);
+		Map<String,Mock> requestMap = readAndStorageFiles(files);
 		context.getBean(MainController.class).setRequestMap(requestMap);
 
 	}
@@ -67,18 +69,22 @@ public class Application extends SpringBootServletInitializer {
 		return fileList;
 	}
 
-	static public Map<String,String> readAndStorageFiles(List<FileDTO> files){
+	static public Map<String,Mock> readAndStorageFiles(List<FileDTO> files){
 		System.out.println("SERVICES LOADED:");
-		Map<String,String> mapRequestResponse = new HashMap<>();
+		Map<String,Mock> mapRequestResponse = new HashMap<>();
 
 		int i = 1;
 		for (FileDTO file : files){
 			String requestPath = file.getRequestPath();
 			String responsePath = file.getResponsePath();
 			if(requestPath != null && responsePath != null){
-				String request = Util.regexAll(read(requestPath));
+				String request = Util.deleteHeader(read(requestPath));
 				String response = read(responsePath);
-				mapRequestResponse.put(request,response);
+				Mock mock = new Mock();
+				mock.setResponse(response);
+				mock.setRequestParams(TransformXML.transformToMap(request));
+				mock.setResponseParams(TransformXML.transformToMap(response));
+				mapRequestResponse.put(Util.regexAll(request),mock);
 
 				System.out.println((i++)+". "+file.getName());
 			}

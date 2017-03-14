@@ -1,43 +1,49 @@
 package com.example;
 
-import com.example.entity.Mapper;
-import com.example.util.MapEntryConverter;
+import com.example.util.TransformXML;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import org.junit.Test;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DemoApplicationTests {
 	//mockRepository/test.txt
 
+	XStream xStream = new XStream(new DomDriver());
 
 	@Test
 	public void context_2(){
-		String xml = Application.read("mockRepository/MESA-TRIAGEM/AutenticarUsuario_response.txt");
-		XStream xStream = new XStream(new DomDriver());
-		xStream.registerConverter(new MapEntryConverter());
-		xStream.alias("soapenv:Envelope", java.util.Map.class);
-		Map<String, List<Object>> map1 = (Map<String, List<Object>>) xStream.fromXML(xml);
-
-		getAllKeys(map1.get("soapenv:Envelope"));
+		String xml = Application.read("C:/Ambientes_Inteli/mockServices/mockRepository/MESA-TRIAGEM/processUserLoginBackoffice_request.xml");
+		TransformXML.transformToMap(xml);
 	}
 
-	public List<String> getAllKeys(List<Object> objects){
+	public List<String> getAllKeys(Collection<Object> objects){
 		for(Object object : objects){
-			Map<String,Object> mapObj = (Map<String,Object>)object;
-			if(!mapObj.isEmpty()){
-				List<Object> val = (List<Object>)mapObj.values();
-				getAllKeys(val);
+			if(object instanceof List){
+				List<Object> listObjects = (List<Object>)object;
+				getAllKeys(listObjects);
+			}
+			if(object instanceof HashMap){
+				Map<String,Object> listObjects = (Map<String,Object>)object;
+				getAllKeys(listObjects.values());
+			}
+			if(object instanceof String){
+				System.out.println(object.toString());
 			}
 		}
-		if(objects.size() > 0 ){
-			getAllKeys(objects);
-		}else {
-			System.out.println("ola");
-		}
 		return null;
+	}
+
+	@Test
+	public void main(){
+		Map<String,String> map1 = new HashMap<>();
+		Map<String,String> map2 = new HashMap<>();
+		map1.put("ola","daniel");
+		map1.put("amor","amigos");
+		map2.put("amor","amigos");
+		map2.put("ola","daniel");
+		System.out.println(map1.equals(map2));
 	}
 
 }
