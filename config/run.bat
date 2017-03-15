@@ -1,0 +1,1 @@
+JAVA -jar mockServices-1.0.jar

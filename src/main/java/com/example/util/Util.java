@@ -12,6 +12,9 @@ public class Util {
     static public String deleteHeader(String str){
         String head = str.substring(0,str.indexOf(">")+1);
         String strSpl[] = str.split("Header");
+        if(strSpl.length ==1 ){
+            return str;
+        }
         String body = strSpl.length == 3 ? strSpl[2] : strSpl[1];
         body = body.substring(body.indexOf("<"),body.length());
         return head+body;

@@ -28,12 +28,12 @@ public class MainController {
     @RequestMapping("/**")
     public String main(@RequestBody String xmlRequest){
         Map<String,String> requestMap = TransformXML.transformToMap(xmlRequest);
-        xmlRequest = Util.deleteHeader(Util.regexAll(xmlRequest));
-        Mock mock = mockMap.get(xmlRequest);
+        String regexrequest = Util.deleteHeader(Util.regexAll(xmlRequest));
+        Mock mock = mockMap.get(regexrequest);
         if(mock != null){
             return mock.getResponse();
         }
-        return null;
+        return "Não existe response para o request:"+xmlRequest;
     }
 
 
